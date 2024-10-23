@@ -13,15 +13,12 @@
         <p class="subheading">A simple todo app made in Vite</p>
         <div class="row">
           <input type="text" id="input-box" placeholder="Add your text">
-          <button onclick="addTask()" type="button">+ Add</button>
+          <button id="add-button" type="button">+ Add</button>
         </div>
-        <ul id="list-container">
-          <li class="checked">task 1</li>
-          <li>task 2</li>
-          <li>task 3</li>
-        </ul>
+        <ul id="list-container"></ul> <!-- Todo items will be dynamically added here -->
       </div>
     </div>
-    <script src="/main.js"></script>
+    <script src="/main.js" type="module"></script>
+    <script src="/app.js"></script>
   </body>
 </html>
