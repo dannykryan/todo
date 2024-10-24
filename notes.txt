@@ -1,0 +1,14 @@
+In order:
+
+*add additional information 
+*add update on modal - add full options to modal - use dialogue input
+add status column, sort by inproggress, todo, complete, etc.
+search function for database (use debouncing)
+
+drag and drop - html drag and drop api her: https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
+
+Convert to React
+-move all of the functionality for fetching data into a Node app and create a backend for doing that
+-use React Router / Tanstack router? (created by Tanner)
+-Tanstack query to query data from the backend
+
