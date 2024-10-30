@@ -13,9 +13,11 @@ body {
   padding: 10px;
 }
 
+#heading-container {
+  text-align: center;
+}
+
 .todo-app {
-  width: 100;
-  max-width: 540px;
   background: #fff;
   margin: 100px auto 20px;
   padding: 40px 30px 70px;
@@ -30,7 +32,7 @@ color: #333;
   margin-bottom: 40px;
 }
 
-#list-container {
+.list {
 list-style-type: none;
 margin: 0;
 padding: 0;
@@ -42,28 +44,21 @@ ul li {
   padding: 12px 8px 12px 50px;
   cursor: pointer;
   position: relative;
+  margin-bottom: 5px;
+  border-radius: 5px;
 }
 
 ul li::before {
   content: '';
   position: absolute;
-  height: 28px;
-  width: 28px;
-  border-radius: 50px;
-  background-image: url(images/unchecked-icon.svg);
+  height: 22px;
+  width: 22px;
+  background-image: url(images/trash-icon.svg);
   background-size: cover;
   background-position: center;
   top: 12px;
   left: 8px;
-}
-
-ul li.checked {
-  color: #555;
-  text-decoration: line-through;
-}
-
-ul li.checked::before {
-  background-image: url(images/checked-icon.svg);
+  opacity: 50%;
 }
 
 ul li span {
@@ -78,18 +73,8 @@ ul li span {
    text-align: center;
 }
 
-ul li span:hover {
-  background: #edeef0;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #edeef0;
-  border-radius: 30px;
-  padding-left: 20px;
-  margin-bottom: 25px;
+ul li:hover {
+  background: #b6a7cc;
 }
 
 input {
@@ -110,4 +95,73 @@ button {
   font-size: 16px;
   cursor: pointer;
   border-radius: 40px;
+}
+
+#kanban-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Creates 4 equal-width columns */
+  gap: 20px; /* Optional: adds space between columns */
+  margin-top: 50px;
+}
+
+#kanban-container h2 {
+  text-align: center;
+}
+
+#todo-list li {
+  background: #AACCBE;
+}
+
+#todo-list li:hover {
+  background: #8ba89c;
+}
+
+#doing-list li {
+  background: #FFD700;
+}
+
+#doing-list li:hover {
+  background: #d5b501;
+}
+
+#done-list li {
+  background: #3ac83d;
+}
+
+#done-list li:hover {
+  background: #2e9f30;
+}
+
+#stuck-list li {
+  background: #FFA07A;
+}
+
+#stuck-list li:hover {
+  background: #cf8163;
+}
+
+#modal {
+  display: none; /* Initially hide the modal */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal-content {
+  max-width: 600px;
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  border-radius: 10px;
+}
+
+.close:hover {
+  cursor: pointer;
 }

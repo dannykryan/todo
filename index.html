@@ -9,13 +9,47 @@
   <body>
     <div class="container">
       <div class="todo-app">
-        <h1 class="main-title">This a Todo App</h1>
-        <p class="subheading">A simple todo app made in Vite</p>
-        <div class="row">
-          <input type="text" id="input-box" placeholder="Add your text">
+        <div id="heading-container">
+          <h1 class="main-title">This a Todo App</h1>
+          <p class="subheading">A simple todo app</p>
           <button id="add-button" type="button">+ Add</button>
         </div>
-        <ul id="list-container"></ul> <!-- Todo items will be dynamically added here -->
+        <div id="kanban-container">
+          <div class="kanban-category">
+            <h2>Todo</h2>
+            <ul id="todo-list" class="list"></ul>
+          </div>
+          <div class="kanban-category">
+            <h2>Doing</h2>
+            <ul id="doing-list" class="list"></ul>
+          </div>
+          <div class="kanban-category">
+            <h2>Done</h2>
+            <ul id="done-list" class="list"></ul>
+          </div>
+          <div class="kanban-category">
+            <h2>Stuck</h2>
+            <ul id="stuck-list" class="list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="modal">
+      <div id="modal-content">
+        <span class="close">&times;</span>
+        <h2>Add a Todo</h2>
+        <input type="text" id="input-box" placeholder="Edit your text">
+
+        <!-- Category Selector -->
+        <label for="category-selector">Select Category:</label>
+        <select id="category-selector">
+          <option value="todo" selected>Todo</option>
+          <option value="doing">Doing</option>
+          <option value="stuck">Stuck</option>
+          <option value="done">Done</option>
+        </select>
+
+        <button id="submit-button" type="button">Save</button>
       </div>
     </div>
     <script src="/main.js" type="module"></script>
