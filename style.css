@@ -48,7 +48,7 @@ ul li {
   border-radius: 5px;
 }
 
-ul li::before {
+.trash-icon {
   content: '';
   position: absolute;
   height: 22px;

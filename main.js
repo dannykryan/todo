@@ -35,7 +35,6 @@ async function fetchTodos() {
   stuckListContainer.innerHTML = '';
 
   // Append each todo item to the list
-  // Append each todo item to the list
   todos.forEach(todo => {
     const li = document.createElement('li');
     li.textContent = todo.todo;
@@ -43,10 +42,25 @@ async function fetchTodos() {
     // Set the id as a data attribute
     li.dataset.id = todo.id; // Store the id in a data attribute
 
+    // Create the trash icon
+    const trashIcon = document.createElement('img');
+    trashIcon.src = '/images/trash-icon.svg';
+    trashIcon.alt = 'Delete';
+    trashIcon.classList.add('trash-icon');
+
     // Add event listener to open the modal with the current todo's details
     li.addEventListener('click', () => {
       openEditModal(todo);
     });
+
+    // Delete todo when the trash icon is clicked
+    trashIcon.addEventListener('click', (event) => {
+      event.stopPropagation();
+      deleteTodo(todo.id);
+    });
+
+    // Append trash icon to the list item
+    li.appendChild(trashIcon);
 
     // Append to the appropriate container based on category
     switch (todo.category) {
@@ -66,6 +80,21 @@ async function fetchTodos() {
         console.warn(`Unrecognized category: ${todo.category}`);
     }
   });
+}
+
+// Function to delete a todo
+async function deleteTodo(id) {
+  const { data, error } = await supabase
+    .from('todos')
+    .delete()
+    .eq('id', id); // Match the todo ID to delete
+
+  if (error) {
+    console.error('Error deleting todo:', error);
+    return;
+  }
+
+  fetchTodos(); // Refresh the list to reflect the changes
 }
 
 // Add new todo
@@ -104,21 +133,6 @@ async function addTask() {
   modal.style.display = 'none'; // Close the modal after adding/updating
   currentTodoId = null; // Reset the currentTodoId for future additions
   fetchTodos(); // Refresh list after adding/updating
-}
-
-// Toggle the completed status of a todo
-async function toggleComplete(id, isCompleted) {
-  const { data, error } = await supabase
-    .from('todos')
-    .update({ completed: isCompleted }) // Update the completed status
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error updating todo:', error);
-    return;
-  }
-
-  fetchTodos(); // Refresh the list to reflect the changes
 }
 
 // Show the modal when the add button is clicked
