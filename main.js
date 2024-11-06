@@ -12,8 +12,12 @@ const doneListContainer = document.getElementById('done-list');
 const stuckListContainer = document.getElementById('stuck-list');
 const addButton = document.getElementById('add-button');
 const submitButton = document.getElementById('submit-button');
+const deleteButton = document.getElementById('delete-button');
 const modal = document.getElementById('modal');
 const closeButton = document.querySelector('.close');
+const statusSelector = document.getElementById('status-selector');
+const categorySelector = document.getElementById('category-selector');
+const importantCheckbox = document.getElementById('important');
 
 let currentTodoId = null; // Variable to store the current todo's ID
 
@@ -40,30 +44,30 @@ async function fetchTodos() {
     li.textContent = todo.todo;
 
     // Set the id as a data attribute
-    li.dataset.id = todo.id; // Store the id in a data attribute
+    li.dataset.uuid = todo.uuid; // Store the uuid in a data attribute
 
-    // Create the trash icon
-    const trashIcon = document.createElement('img');
-    trashIcon.src = '/images/trash-icon.svg';
-    trashIcon.alt = 'Delete';
-    trashIcon.classList.add('trash-icon');
+    // Create the edit icon
+    const editIcon = document.createElement('img');
+    editIcon.src = '/images/edit-icon.svg';
+    editIcon.alt = 'Delete';
+    editIcon.classList.add('edit-icon');
 
     // Add event listener to open the modal with the current todo's details
     li.addEventListener('click', () => {
       openEditModal(todo);
     });
 
-    // Delete todo when the trash icon is clicked
-    trashIcon.addEventListener('click', (event) => {
+    // Delete todo when the edit icon is clicked
+    editIcon.addEventListener('click', (event) => {
       event.stopPropagation();
-      deleteTodo(todo.id);
+      deleteTodo(todo.uuid);
     });
 
-    // Append trash icon to the list item
-    li.appendChild(trashIcon);
+    // Append edit icon to the list item
+    li.appendChild(editIcon);
 
-    // Append to the appropriate container based on category
-    switch (todo.category) {
+    // Append to the appropriate container based on status
+    switch (todo.status) {
       case 'todo':
         todoListContainer.appendChild(li);
         break;
@@ -77,17 +81,23 @@ async function fetchTodos() {
         stuckListContainer.appendChild(li);
         break;
       default:
-        console.warn(`Unrecognized category: ${todo.category}`);
+        console.warn(`Unrecognized status: ${todo.status}`);
     }
   });
 }
 
+// Delete button will delete the current todo
+deleteButton.addEventListener('click', () => {
+  deleteTodo(currentTodoId);
+  resetAndCloseModal();
+});
+
 // Function to delete a todo
-async function deleteTodo(id) {
+async function deleteTodo(uuid) {
   const { data, error } = await supabase
     .from('todos')
     .delete()
-    .eq('id', id); // Match the todo ID to delete
+    .eq('uuid', uuid); // Match the todo uuid to delete
 
   if (error) {
     console.error('Error deleting todo:', error);
@@ -98,9 +108,9 @@ async function deleteTodo(id) {
 }
 
 // Add new todo
-async function addTask() {
+async function addTodo() {
   const todoText = inputBox.value;
-  const categorySelector = document.getElementById('category-selector');
+  const selectedStatus = statusSelector.value;
   const selectedCategory = categorySelector.value;
 
   if (!todoText.trim()) return; // Prevent adding empty task
@@ -109,8 +119,8 @@ async function addTask() {
     // Update the existing todo
     const { data, error } = await supabase
       .from('todos')
-      .update({ todo: todoText, category: selectedCategory }) // Update the text and category
-      .eq('id', currentTodoId); // Match the current todo ID
+      .update({ todo: todoText, status: selectedStatus, category: selectedCategory, important: getCheckboxValue() }) // Update the text and status
+      .eq('uuid', currentTodoId); // Match the current todo ID
 
     if (error) {
       console.error('Error updating todo:', error);
@@ -120,7 +130,7 @@ async function addTask() {
     // Add new todo
     const { data, error } = await supabase
       .from('todos')
-      .insert([{ todo: todoText, completed: false, category: selectedCategory }]);
+      .insert([{ todo: todoText, completed: false, status: selectedStatus, category: selectedCategory, important: getCheckboxValue() }]);
 
     if (error) {
       console.error('Error adding todo:', error);
@@ -128,21 +138,36 @@ async function addTask() {
     }
   }
 
-  inputBox.value = ''; // Clear input
-  document.getElementById('category-selector').value = 'todo'; // Reset to default category
-  modal.style.display = 'none'; // Close the modal after adding/updating
-  currentTodoId = null; // Reset the currentTodoId for future additions
+  resetAndCloseModal();
   fetchTodos(); // Refresh list after adding/updating
+}
+
+let resetAndCloseModal = () => {
+  // Reset all the modal values, current id and close the modal
+  inputBox.value = '';
+  document.getElementById('status-selector').value = 'todo';
+  document.getElementById('category-selector').value = 'shopping';
+  modal.style.display = 'none';
+  currentTodoId = null;
+  deleteButton.style.display = 'none';
+  importantCheckbox.checked = false;
+}
+
+// Get the checkbox value
+function getCheckboxValue() {
+  return importantCheckbox.checked ? importantCheckbox.value : "false";
 }
 
 // Show the modal when the add button is clicked
 document.getElementById('add-button').addEventListener('click', () => {
   modal.style.display = 'block';
+  currentTodoId = null; // Clear the current todo ID for adding a new todo
+  deleteButton.style.display = 'none'; // Hide delete button in add mode
 });
 
 // Close the modal when the close button is clicked
 closeButton.addEventListener('click', () => {
-  modal.style.display = 'none';
+  resetAndCloseModal();
 });
 
 // Close the modal when clicking outside of the modal content
@@ -155,13 +180,14 @@ window.addEventListener('click', (event) => {
 //Open the modal when clicking a todo item
 function openEditModal(todo) {
   inputBox.value = todo.todo; // Set the input box value to the current todo text
-  document.getElementById('category-selector').value = todo.category; // Set the category selector to the current category
+  document.getElementById('status-selector').value = todo.status; // Set the status selector to the current status
   modal.style.display = 'block'; // Show the modal
-  currentTodoId = todo.id; // Store the current todo's ID for updating
+  currentTodoId = todo.uuid;
+  deleteButton.style.display = 'block';
 }
 
 // Set up event listeners
-submitButton.addEventListener('click', addTask);
+submitButton.addEventListener('click', addTodo);
 
 // Fetch todos on page load
 fetchTodos();

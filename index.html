@@ -15,19 +15,19 @@
           <button id="add-button" type="button">+ Add</button>
         </div>
         <div id="kanban-container">
-          <div class="kanban-category">
+          <div class="kanban-status">
             <h2>Todo</h2>
             <ul id="todo-list" class="list"></ul>
           </div>
-          <div class="kanban-category">
+          <div class="kanban-status">
             <h2>Doing</h2>
             <ul id="doing-list" class="list"></ul>
           </div>
-          <div class="kanban-category">
+          <div class="kanban-status">
             <h2>Done</h2>
             <ul id="done-list" class="list"></ul>
           </div>
-          <div class="kanban-category">
+          <div class="kanban-status">
             <h2>Stuck</h2>
             <ul id="stuck-list" class="list"></ul>
           </div>
@@ -36,23 +36,41 @@
     </div>
     <div id="modal">
       <div id="modal-content">
-        <span class="close">&times;</span>
-        <h2>Add a Todo</h2>
-        <input type="text" id="input-box" placeholder="Edit your text">
+        <div class="modal-title">
+          <span class="close">&times;</span>
+          <h2>Add a Todo</h2>
+        </div>
 
-        <!-- Category Selector -->
-        <label for="category-selector">Select Category:</label>
-        <select id="category-selector">
-          <option value="todo" selected>Todo</option>
-          <option value="doing">Doing</option>
-          <option value="stuck">Stuck</option>
-          <option value="done">Done</option>
-        </select>
+        <div class="modal-form">
+          <input type="text" id="input-box" placeholder="Edit your text">
+          <label for="status-selector">Select Status:</label>
+          <select id="status-selector">
+            <option value="todo" selected>Todo</option>
+            <option value="doing">Doing</option>
+            <option value="stuck">Stuck</option>
+            <option value="done">Done</option>
+          </select>
 
-        <button id="submit-button" type="button">Save</button>
+          <label for="category-selector">Select Category:</label>
+          <select id="category-selector">
+            <option value="shopping" selected>Shopping</option>
+            <option value="school">School</option>
+            <option value="work">Work</option>
+            <option value="home">Home</option>
+          </select>
+
+          <div>
+            <input type="checkbox" id="important" name="important" value="true">
+            <label for="important"> Important</label><br>
+          </div>
+
+          <button id="submit-button" type="button">Save</button>
+          <button id="delete-button" type="button">Delete Task</button>
+        </div>
       </div>
     </div>
     <script src="/main.js" type="module"></script>
     <script src="/app.js"></script>
+    <script src="seedData.js"></script>
   </body>
 </html>

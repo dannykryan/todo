@@ -3,6 +3,9 @@ In order:
 *add additional information 
 *add update on modal - add full options to modal - use dialogue input
 add status column, sort by inproggress, todo, complete, etc.
+
+add priority, description, filter by, sort by, due date, calendar view
+
 search function for database (use debouncing)
 
 drag and drop - html drag and drop api her: https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
@@ -12,3 +15,9 @@ Convert to React
 -use React Router / Tanstack router? (created by Tanner)
 -Tanstack query to query data from the backend
 
+
+
+Add additional information:
+
+- add a category (shopping, health, school, etc. each have an icon associated with them)
+- ability to add a category to each todo

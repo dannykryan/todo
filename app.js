@@ -36,13 +36,13 @@ app.post('/todos', async (req, res) => {
   res.status(201).json(data); //returns the inserted data
 });
 
-app.get('/todos/:id', async ( req, res ) => {
-  const { id } = req.params;
+app.get('/todos/:uuid', async ( req, res ) => {
+  const { uuid } = req.params;
 
   const { data, error } = await supabase
     .from('todos')
-    .select('id, created_at, todo')
-    .eq('id', id)
+    .select('uuid, created_at, todo')
+    .eq('uuid', uuid)
     .single();
 
   if (error) {
@@ -51,33 +51,33 @@ app.get('/todos/:id', async ( req, res ) => {
   res.json(data);
 })
 
-app.put('/todos/:id', async ( req, res ) => {
-  const {id} = req.params;
+app.put('/todos/:uuid', async ( req, res ) => {
+  const {uuid} = req.params;
   const {todo} = req.body; // This will only update the todo
 
   const { data, error } = await supabase
     .from('todos')
     .update({ todo })
-    .eq('id', id);
+    .eq('uuid', uuid);
 
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-  res.json(`udpated todo number ${id}: ${data}`);
+  res.json(`udpated todo number ${uuid}: ${data}`);
 })
 
-app.delete ('/todos/:id', async ( req, res ) => {
-  const {id} = req.params;
+app.delete ('/todos/:uuid', async ( req, res ) => {
+  const {uuid} = req.params;
 
   const { data, error } = await supabase
     .from('todos')
     .delete()
-    .eq('id', id);
+    .eq('uuid', uuid);
 
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-  res.json(`Deleted ${id}: ${data}`);
+  res.json(`Deleted ${uuid}: ${data}`);
 })
 
 // Start the server
