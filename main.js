@@ -58,8 +58,8 @@ function groupTodos(todos, sortBy) {
   const grouped = {};
 
   // Define the specific order for categories and statuses
-  const categoryOrder = ['shopping', 'home', 'work', 'school']; // Order for categories
-  const statusOrder = ['todo', 'doing', 'done', 'stuck']; // Order for statuses
+  const categoryOrder = ['shopping', 'home', 'work', 'school'];
+  const statusOrder = ['todo', 'doing', 'done', 'stuck'];
 
   // Group todos by 'status' or 'category'
   todos.forEach(todo => {
@@ -305,8 +305,8 @@ searchInput.addEventListener('input', async function() {
       
       // Add click event to open the todo in the edit modal
       resultItem.addEventListener('click', () => {
-        openEditModal(todo);  // Opens the edit modal with the selected todo
-        searchModal.style.display = 'none'; // Close the search modal after selecting a todo
+        openEditModal(todo);
+        searchModal.style.display = 'none';
       });
       
       searchResults.appendChild(resultItem);
@@ -314,18 +314,15 @@ searchInput.addEventListener('input', async function() {
   }
 });
 
-// Listen for the click event on the search button
+// Search modal event listeners
 searchButton.addEventListener('click', function() {
   searchModal.style.display = 'block';
 });
 
-// Listen for the click event on the search button
 closeSearchModal.addEventListener('click', function() {
-  // Show the search modal when the button is clicked
   searchModal.style.display = 'none';
 });
 
-// Close the modal if clicked outside
 window.addEventListener('click', function(event) {
   if (event.target === searchModal) {
     searchModal.style.display = 'none';

@@ -4,9 +4,19 @@ In order:
 *add update on modal - add full options to modal - use dialogue input
 add status column, sort by inproggress, todo, complete, etc.
 
-add priority, description, filter by, sort by, due date, calendar view
-
 search function for database (use debouncing)
+-set timeout to delay search function
+
+add priority, description, filter by, sort by, 
+
+add: *due date, *calendar view (https://bootstrapbrain.com/javascript-calendar-libraries-plugins/)
+- create a dashboard that you see before the main page.
+- - show total numbers for eahc of the statuses (total doing, stuck etc.)
+- - use css grid
+- - create a pie chart that visualises the data
+
+
+
 
 drag and drop - html drag and drop api her: https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API
 
