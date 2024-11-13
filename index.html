@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vite App</title>
   </head>
   <body>
@@ -19,28 +19,13 @@
               <option value="status" selected>Status</option>
               <option value="category">Category</option>
             </select>
+            <button id="search-button" type="button">Search</button>
             <button id="add-button" type="button">+ Add</button>
           </div>
 
         </div>
-        <div id="kanban-container">
-          <div class="kanban-status">
-            <h2>Todo</h2>
-            <ul id="todo-list" class="list"></ul>
-          </div>
-          <div class="kanban-status">
-            <h2>Doing</h2>
-            <ul id="doing-list" class="list"></ul>
-          </div>
-          <div class="kanban-status">
-            <h2>Done</h2>
-            <ul id="done-list" class="list"></ul>
-          </div>
-          <div class="kanban-status">
-            <h2>Stuck</h2>
-            <ul id="stuck-list" class="list"></ul>
-          </div>
-        </div>
+      <div id="kanban-container">
+      </div>
       </div>
     </div>
     <div id="modal">
@@ -76,6 +61,21 @@
           <button id="submit-button" type="button">Save</button>
           <button id="delete-button" type="button">Delete Task</button>
         </div>
+
+        <div id="search-modal">
+          <div id="search-modal-content">
+            <div class="modal-title">
+              <span class="close">&times;</span>
+              <h2>Search Todos</h2>
+            </div>
+
+            <div class="modal-form">
+              <input type="text" id="search-input" placeholder="Search for a todo item">
+              <ul id="search-results" class="list"></ul>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <script src="/main.js" type="module"></script>

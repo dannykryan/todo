@@ -47,7 +47,7 @@ ul li {
   border-radius: 5px;
 }
 
-.edit-icon {
+.category-icon {
   content: '';
   position: absolute;
   height: 22px;
@@ -210,4 +210,8 @@ button {
 .heading-controls button {
   margin: 10px auto 0;
   width: 200px;
+}
+
+.kanban-category li {
+  border: 2px solid grey
 }

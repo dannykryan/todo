@@ -30,63 +30,123 @@ async function fetchTodos() {
     .select('*')
     .order('created_at', { ascending: false })  // Sort by created_at, descending order
     .order('uuid', { ascending: true }); // Sort by uuid as a tiebreaker
-  
+
   if (error) {
     console.error('Error fetching todos:', error.message);
     return;
   }
 
-  // Clear the list before appending new items
-  todoListContainer.innerHTML = '';
-  doingListContainer.innerHTML = '';
-  doneListContainer.innerHTML = '';
-  stuckListContainer.innerHTML = '';
+  // Clear the kanban container before adding new items
+  kanbanContainer.innerHTML = '';
 
-  // Sort and append each todo item to the corresponding list based on its status
-  const statusContainers = {
-    todo: todoListContainer,
-    doing: doingListContainer,
-    done: doneListContainer,
-    stuck: stuckListContainer
+  const sortBy = sortSelector.value; // Get the selected sort option
+
+  // Group todos by either 'status' or 'category' based on the selected sort
+  const groups = groupTodos(todos, sortBy);
+
+  // Dynamically create kanban-status containers
+  Object.keys(groups).forEach(groupKey => {
+    const groupContainer = createKanbanStatusContainer(groupKey, groups[groupKey]);
+    kanbanContainer.appendChild(groupContainer);
+  });
+}
+
+// Group todos by 'status' or 'category'
+function groupTodos(todos, sortBy) {
+  const grouped = {};
+
+  // Define the specific order for categories and statuses
+  const categoryOrder = ['shopping', 'home', 'work', 'school']; // Order for categories
+  const statusOrder = ['todo', 'doing', 'done', 'stuck']; // Order for statuses
+
+  // Group todos by 'status' or 'category'
+  todos.forEach(todo => {
+    const groupKey = todo[sortBy]; // 'status' or 'category'
+    if (!grouped[groupKey]) {
+      grouped[groupKey] = [];
+    }
+    grouped[groupKey].push(todo);
+  });
+
+  // Sort the grouped todos according to the fixed order
+  const sortedGroups = {};
+  if (sortBy === 'category') {
+    categoryOrder.forEach(category => {
+      if (grouped[category]) {
+        sortedGroups[category] = grouped[category];
+      }
+    });
+  } else if (sortBy === 'status') {
+    statusOrder.forEach(status => {
+      if (grouped[status]) {
+        sortedGroups[status] = grouped[status];
+      }
+    });
+  }
+
+  return sortedGroups;
+}
+
+// Create a new kanban-status div
+function createKanbanStatusContainer(groupKey, todos, isCategory = false) {
+  const kanbanStatusDiv = document.createElement('div');
+  
+  // Add the correct class based on whether this is a category or status
+  if (sortSelector.value === 'category') {
+    kanbanStatusDiv.classList.add('kanban-category');
+  } else {
+    kanbanStatusDiv.classList.add('kanban-status');
+  }
+
+  const heading = document.createElement('h2');
+  heading.textContent = groupKey.charAt(0).toUpperCase() + groupKey.slice(1); // Capitalize the first letter
+  kanbanStatusDiv.appendChild(heading);
+
+  const ul = document.createElement('ul');
+  ul.id = groupKey + '-list'; // Set the id to the group name (status or category)
+  ul.classList.add('list');
+
+  // Icon mapping for each category
+  const iconMapping = {
+    shopping: '/images/shop-icon.svg',
+    home: '/images/home-icon.svg',
+    work: '/images/work-icon.svg',
+    school: '/images/school-icon.svg'
   };
 
-
-  // Append each todo item to the list
   todos.forEach(todo => {
     const li = document.createElement('li');
     li.textContent = todo.todo;
-
-    // Set the id as a data attribute
     li.dataset.uuid = todo.uuid;
 
-    // Create the edit icon
-    const editIcon = document.createElement('img');
-    editIcon.src = '/images/edit-icon.svg';
-    editIcon.alt = 'Delete';
-    editIcon.classList.add('edit-icon');
+    // Create the category icon and set it based on the todo's category
+    const categoryIcon = document.createElement('img');
+    // Set the icon dynamically based on the todo's category
+    categoryIcon.src = iconMapping[todo.category] || '/images/edit-icon.svg'; // Default icon if category is unknown
+    categoryIcon.alt = 'category-icon';
+    categoryIcon.classList.add('category-icon');
 
     // Add event listener to open the modal with the current todo's details
     li.addEventListener('click', () => {
       openEditModal(todo);
     });
 
-    // Delete todo when the edit icon is clicked
-    editIcon.addEventListener('click', (event) => {
+    // Delete todo when the category icon is clicked
+    categoryIcon.addEventListener('click', (event) => {
       event.stopPropagation();
       deleteTodo(todo.uuid);
     });
 
-    // Append edit icon to the list item
-    li.appendChild(editIcon);
+    // Append category icon to the list item
+    li.appendChild(categoryIcon);
 
-    // Append to the appropriate container based on status
-    if (statusContainers[todo.status]) {
-      statusContainers[todo.status].appendChild(li);
-    } else {
-      console.warn(`Unrecognized status: ${todo.status}`);
-    }
+    ul.appendChild(li);
   });
+
+  kanbanStatusDiv.appendChild(ul);
+  return kanbanStatusDiv;
 }
+
 
 // Delete button will delete the current todo
 deleteButton.addEventListener('click', () => {
@@ -191,6 +251,9 @@ function openEditModal(todo) {
 
 // Set up event listeners
 submitButton.addEventListener('click', addTodo);
+
+// Handle sort selection change
+sortSelector.addEventListener('change', fetchTodos);
 
 // Fetch todos on page load
 fetchTodos();
