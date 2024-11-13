@@ -61,23 +61,23 @@
           <button id="submit-button" type="button">Save</button>
           <button id="delete-button" type="button">Delete Task</button>
         </div>
-
-        <div id="search-modal">
-          <div id="search-modal-content">
-            <div class="modal-title">
-              <span class="close">&times;</span>
-              <h2>Search Todos</h2>
-            </div>
-
-            <div class="modal-form">
-              <input type="text" id="search-input" placeholder="Search for a todo item">
-              <ul id="search-results" class="list"></ul>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
+
+    <div id="search-modal">
+      <div id="search-modal-content">
+        <div class="modal-title">
+          <span id="close-search-modal" class="close">&times;</span>
+          <h2>Search Todos</h2>
+        </div>
+
+        <div class="modal-form">
+          <input type="text" id="search-input" placeholder="Search for a todo item">
+          <ul id="search-results" class="list"></ul>
+        </div>
+      </div>
+    </div>
+
     <script src="/main.js" type="module"></script>
     <script src="/app.js"></script>
     <script src="seedData.js"></script>

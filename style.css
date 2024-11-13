@@ -98,6 +98,10 @@ button {
   margin-bottom: 10px;
 }
 
+button:hover {
+  background-color: rgb(95, 6, 95);
+}
+
 #delete-button {
   background: #7c1b1b;
 }
@@ -214,4 +218,117 @@ button {
 
 .kanban-category li {
   border: 2px solid grey
+}
+
+/* Basic modal styles */
+#search-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 1000; /* Ensure modal is above other content */
+}
+
+/* Modal content container */
+#search-modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the modal */
+  background: white;
+  padding: 20px;
+  border-radius: 8px; /* Rounded corners */
+  width: 90%;
+  max-width: 500px; /* Limit the width */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  text-align: center;
+}
+
+/* Close button */
+#search-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+#search-modal-close:hover {
+  color: #f00; /* Red color on hover */
+}
+
+/* Search input field */
+#search-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 20px 0;
+  box-sizing: border-box; /* Ensure padding does not affect width */
+}
+
+/* Search results container */
+#search-results {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual result item */
+#search-results li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#search-results li:hover {
+  background-color: #f4f4f4;
+}
+
+/* Style for the search button (if needed) */
+#search-button {
+  border: none;
+  outline: none;
+  padding: 16px 50px;
+  background: rgb(13, 85, 161);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 40px;
+  margin-bottom: 10px;
+}
+
+#search-button:hover {
+  background-color: rgb(8, 59, 114);
+}
+
+/* Responsive design: ensure modal looks good on smaller screens */
+@media (max-width: 600px) {
+  #search-modal-content {
+    width: 90%;
+    padding: 15px;
+  }
+
+  #search-input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  #search-modal-close {
+    font-size: 20px;
+  }
+
+  #search-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
 }

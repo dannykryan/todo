@@ -6,10 +6,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const inputBox = document.getElementById('input-box');
-const todoListContainer = document.getElementById('todo-list');
-const doingListContainer = document.getElementById('doing-list');
-const doneListContainer = document.getElementById('done-list');
-const stuckListContainer = document.getElementById('stuck-list');
 const addButton = document.getElementById('add-button');
 const submitButton = document.getElementById('submit-button');
 const deleteButton = document.getElementById('delete-button');
@@ -20,6 +16,12 @@ const categorySelector = document.getElementById('category-selector');
 const importantCheckbox = document.getElementById('important');
 const kanbanContainer = document.getElementById('kanban-container');
 const sortSelector = document.getElementById('sort-selector');
+
+const searchButton = document.getElementById('search-button');
+const searchModal = document.getElementById('search-modal');
+const closeSearchModal = document.getElementById('close-search-modal');
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
 
 let currentTodoId = null; // Variable to store the current todo's ID
 
@@ -221,7 +223,7 @@ function getCheckboxValue() {
 }
 
 // Show the modal when the add button is clicked
-document.getElementById('add-button').addEventListener('click', () => {
+addButton.addEventListener('click', () => {
   modal.style.display = 'block';
   currentTodoId = null; // Clear the current todo ID for adding a new todo
   deleteButton.style.display = 'none'; // Hide delete button in add mode
@@ -254,6 +256,68 @@ submitButton.addEventListener('click', addTodo);
 
 // Handle sort selection change
 sortSelector.addEventListener('change', fetchTodos);
+
+// Search functionality
+searchInput.addEventListener('input', async function() {
+  const searchTerm = searchInput.value.trim().toLowerCase();  // Get the search input and make it lowercase for case-insensitive search
+  
+  if (searchTerm === '') {
+    // If no search term, clear results
+    searchResults.innerHTML = '';
+    return;
+  }
+
+  // Query Supabase to search for todos that match the search term
+  const { data: todos, error } = await supabase
+    .from('todos')
+    .select('*')
+    .ilike('todo', `%${searchTerm}%`); // Search for todos where the 'todo' field contains the search term (case-insensitive)
+
+  if (error) {
+    console.error('Error searching todos:', error.message);
+    return;
+  }
+
+  // Clear previous search results
+  searchResults.innerHTML = '';
+
+  // Display the search results in the modal
+  if (todos.length === 0) {
+    searchResults.innerHTML = '<li>No results found.</li>';
+  } else {
+    todos.forEach(todo => {
+      const resultItem = document.createElement('li');
+      resultItem.textContent = todo.todo;
+      resultItem.dataset.uuid = todo.uuid; // Store the UUID for each result
+      
+      // Add click event to open the todo in the edit modal
+      resultItem.addEventListener('click', () => {
+        openEditModal(todo);  // Opens the edit modal with the selected todo
+        searchModal.style.display = 'none'; // Close the search modal after selecting a todo
+      });
+      
+      searchResults.appendChild(resultItem);
+    });
+  }
+});
+
+// Listen for the click event on the search button
+searchButton.addEventListener('click', function() {
+  searchModal.style.display = 'block';
+});
+
+// Listen for the click event on the search button
+closeSearchModal.addEventListener('click', function() {
+  // Show the search modal when the button is clicked
+  searchModal.style.display = 'none';
+});
+
+// Close the modal if clicked outside
+window.addEventListener('click', function(event) {
+  if (event.target === searchModal) {
+    searchModal.style.display = 'none';
+  }
+});
 
 // Fetch todos on page load
 fetchTodos();
