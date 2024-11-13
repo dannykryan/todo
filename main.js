@@ -245,10 +245,23 @@ window.addEventListener('click', (event) => {
 function openEditModal(todo) {
   inputBox.value = todo.todo; // Set the input box value to the current todo text
   document.getElementById('status-selector').value = todo.status; // Set the status selector to the current status
+  document.getElementById('category-selector').value = todo.category; // Set the category selector to the current category
   modal.style.display = 'block'; // Show the modal
   currentTodoId = todo.uuid;
   deleteButton.style.display = 'block';
   importantCheckbox.checked = todo.important;
+
+  // Set the category icon
+  const categoryIcon = document.querySelector('.category-icon'); // Assuming you have this class in the modal
+  if (categoryIcon) {
+    const iconMapping = {
+      shopping: '/images/shop-icon.svg',
+      home: '/images/home-icon.svg',
+      work: '/images/work-icon.svg',
+      school: '/images/school-icon.svg'
+    };
+    categoryIcon.src = iconMapping[todo.category] || '/images/edit-icon.svg'; // Set default icon if not found
+  }
 }
 
 // Set up event listeners

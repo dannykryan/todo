@@ -220,7 +220,6 @@ button:hover {
   border: 2px solid grey
 }
 
-/* Basic modal styles */
 #search-modal {
   display: none;
   position: fixed;
@@ -228,22 +227,21 @@ button:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  z-index: 1000; /* Ensure modal is above other content */
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }
 
-/* Modal content container */
 #search-modal-content {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Center the modal */
+  transform: translate(-50%, -50%);
   background: white;
   padding: 20px;
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 8px;
   width: 90%;
-  max-width: 500px; /* Limit the width */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  max-width: 500px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -294,41 +292,16 @@ button:hover {
   background-color: #f4f4f4;
 }
 
-/* Style for the search button (if needed) */
 #search-button {
-  border: none;
-  outline: none;
-  padding: 16px 50px;
   background: rgb(13, 85, 161);
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 40px;
-  margin-bottom: 10px;
 }
 
 #search-button:hover {
   background-color: rgb(8, 59, 114);
 }
 
-/* Responsive design: ensure modal looks good on smaller screens */
-@media (max-width: 600px) {
-  #search-modal-content {
-    width: 90%;
-    padding: 15px;
-  }
-
-  #search-input {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  #search-modal-close {
-    font-size: 20px;
-  }
-
-  #search-button {
-    padding: 8px 16px;
-    font-size: 14px;
-  }
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
 }
