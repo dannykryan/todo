@@ -18,6 +18,8 @@ const closeButton = document.querySelector('.close');
 const statusSelector = document.getElementById('status-selector');
 const categorySelector = document.getElementById('category-selector');
 const importantCheckbox = document.getElementById('important');
+const kanbanContainer = document.getElementById('kanban-container');
+const sortSelector = document.getElementById('sort-selector');
 
 let currentTodoId = null; // Variable to store the current todo's ID
 
@@ -25,7 +27,9 @@ let currentTodoId = null; // Variable to store the current todo's ID
 async function fetchTodos() {
   const { data: todos, error } = await supabase
     .from('todos')
-    .select('*');
+    .select('*')
+    .order('created_at', { ascending: false })  // Sort by created_at, descending order
+    .order('uuid', { ascending: true }); // Sort by uuid as a tiebreaker
   
   if (error) {
     console.error('Error fetching todos:', error.message);
@@ -38,13 +42,22 @@ async function fetchTodos() {
   doneListContainer.innerHTML = '';
   stuckListContainer.innerHTML = '';
 
+  // Sort and append each todo item to the corresponding list based on its status
+  const statusContainers = {
+    todo: todoListContainer,
+    doing: doingListContainer,
+    done: doneListContainer,
+    stuck: stuckListContainer
+  };
+
+
   // Append each todo item to the list
   todos.forEach(todo => {
     const li = document.createElement('li');
     li.textContent = todo.todo;
 
     // Set the id as a data attribute
-    li.dataset.uuid = todo.uuid; // Store the uuid in a data attribute
+    li.dataset.uuid = todo.uuid;
 
     // Create the edit icon
     const editIcon = document.createElement('img');
@@ -67,21 +80,10 @@ async function fetchTodos() {
     li.appendChild(editIcon);
 
     // Append to the appropriate container based on status
-    switch (todo.status) {
-      case 'todo':
-        todoListContainer.appendChild(li);
-        break;
-      case 'doing':
-        doingListContainer.appendChild(li);
-        break;
-      case 'done':
-        doneListContainer.appendChild(li);
-        break;
-      case 'stuck':
-        stuckListContainer.appendChild(li);
-        break;
-      default:
-        console.warn(`Unrecognized status: ${todo.status}`);
+    if (statusContainers[todo.status]) {
+      statusContainers[todo.status].appendChild(li);
+    } else {
+      console.warn(`Unrecognized status: ${todo.status}`);
     }
   });
 }
@@ -155,7 +157,7 @@ let resetAndCloseModal = () => {
 
 // Get the checkbox value
 function getCheckboxValue() {
-  return importantCheckbox.checked ? importantCheckbox.value : "false";
+  return importantCheckbox.checked;  // returns true if checked, false if not
 }
 
 // Show the modal when the add button is clicked
@@ -177,13 +179,14 @@ window.addEventListener('click', (event) => {
   }
 });
 
-//Open the modal when clicking a todo item
+// Open the modal when clicking a todo item
 function openEditModal(todo) {
   inputBox.value = todo.todo; // Set the input box value to the current todo text
   document.getElementById('status-selector').value = todo.status; // Set the status selector to the current status
   modal.style.display = 'block'; // Show the modal
   currentTodoId = todo.uuid;
   deleteButton.style.display = 'block';
+  importantCheckbox.checked = todo.important;
 }
 
 // Set up event listeners

@@ -1,0 +1,28 @@
+[
+    { "todo": "Buy groceries", "completed": false, "important": false, "status": "todo", "category": "shopping" },
+    { "todo": "Finish homework", "completed": false, "important": true, "status": "doing", "category": "school" },
+    { "todo": "Clean the house", "completed": false, "important": false, "status": "stuck", "category": "home" },
+    { "todo": "Submit report", "completed": true, "important": true, "status": "done", "category": "work" },
+    { "todo": "Read a book", "completed": false, "important": false, "status": "todo", "category": "home" },
+    { "todo": "Pay bills", "completed": false, "important": true, "status": "todo", "category": "home" },
+    { "todo": "Exercise at gym", "completed": false, "important": true, "status": "doing", "category": "home" },
+    { "todo": "Weekly team meeting", "completed": true, "important": false, "status": "done", "category": "work" },
+    { "todo": "Plan weekend trip", "completed": false, "important": true, "status": "todo", "category": "home" },
+    { "todo": "Create project outline", "completed": false, "important": true, "status": "doing", "category": "work" },
+    { "todo": "Buy new clothes", "completed": false, "important": false, "status": "todo", "category": "shopping" },
+    { "todo": "Organize desk", "completed": true, "important": false, "status": "done", "category": "work" },
+    { "todo": "Fix broken chair", "completed": false, "important": false, "status": "stuck", "category": "home" },
+    { "todo": "Book dentist appointment", "completed": false, "important": true, "status": "todo", "category": "home" },
+    { "todo": "Complete coding challenge", "completed": false, "important": true, "status": "doing", "category": "school" },
+    { "todo": "Prepare for presentation", "completed": true, "important": true, "status": "done", "category": "work" },
+    { "todo": "Visit grandparents", "completed": false, "important": true, "status": "todo", "category": "home" },
+    { "todo": "Write blog post", "completed": false, "important": true, "status": "doing", "category": "work" },
+    { "todo": "Organize closet", "completed": false, "important": false, "status": "stuck", "category": "home" },
+    { "todo": "Research new laptop", "completed": false, "important": false, "status": "todo", "category": "shopping" },
+    { "todo": "Update resume", "completed": true, "important": false, "status": "done", "category": "work" },
+    { "todo": "Review project report", "completed": false, "important": true, "status": "doing", "category": "work" },
+    { "todo": "Take car for service", "completed": false, "important": false, "status": "stuck", "category": "home" },
+    { "todo": "Plan birthday party", "completed": false, "important": true, "status": "todo", "category": "home" },
+    { "todo": "Grocery shopping for party", "completed": true, "important": true, "status": "done", "category": "shopping" }
+]
+  

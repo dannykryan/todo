@@ -12,7 +12,16 @@
         <div id="heading-container">
           <h1 class="main-title">This a Todo App</h1>
           <p class="subheading">A simple todo app</p>
-          <button id="add-button" type="button">+ Add</button>
+
+          <div class="heading-controls">
+            <label for="sort-selector">Sort By:</label>
+            <select id="sort-selector">
+              <option value="status" selected>Status</option>
+              <option value="category">Category</option>
+            </select>
+            <button id="add-button" type="button">+ Add</button>
+          </div>
+
         </div>
         <div id="kanban-container">
           <div class="kanban-status">

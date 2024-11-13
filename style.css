@@ -18,7 +18,7 @@ body {
 
 .todo-app {
   background: #fff;
-  margin: 100px auto 20px;
+  margin: 20px auto 20px;
   padding: 40px 30px 70px;
   border-radius: 10px;
 }
@@ -198,4 +198,16 @@ button {
 
 .hide {
   display: none;
+}
+
+.heading-controls {
+  display: flex;
+  flex-direction: column;
+  max-width:  300px;
+  margin: 0 auto;
+}
+
+.heading-controls button {
+  margin: 10px auto 0;
+  width: 200px;
 }
