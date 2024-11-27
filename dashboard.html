@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <div class="container">
+        <header>
+        <h1>Todo Dashboard</h1>
+        <nav>
+            <a href="index.html">Kanban View</a>
+        </nav>
+        </header>
+        <main class="dashboard-grid">
+        <div class="card" id="total-by-category">
+            <h2>Tasks by Category</h2>
+            <ul id="category-summary"></ul>
+        </div>
+        <div class="card" id="high-priority-tasks">
+            <h2>High-Priority Tasks</h2>
+            <p id="high-priority-count">Loading...</p>
+        </div>
+        <div class="card" id="tasks-by-status">
+            <h2>Tasks by Status</h2>
+            <ul id="status-summary"></ul>
+        </div>
+        <div class="card" id="status-pie-chart">
+            <h2>Status Distribution</h2>
+            <div id="pie-chart"></div>
+        </div>
+        </main>
+    </div>
+    <script src="/dashboard.js" type="module"></script>
+  </body>
+</html>

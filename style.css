@@ -178,6 +178,11 @@ button:hover {
   padding: 0 80px 0 80px;
 }
 
+.modal-form textarea {
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+ }
+
 .modal-form select {
  margin-bottom: 20px;
 }
@@ -208,7 +213,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   max-width:  300px;
-  margin: 0 auto;
+  margin: 20px auto 0;
 }
 
 .heading-controls button {
@@ -259,7 +264,7 @@ button:hover {
 }
 
 #search-modal-close:hover {
-  color: #f00; /* Red color on hover */
+  color: #f00;
 }
 
 /* Search input field */
@@ -304,4 +309,43 @@ button:hover {
   display: flex;
   justify-content: space-between;
   gap: 5px;
+}
+
+
+/* Dashboard Styles */
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #004217;
+  margin: 0 10px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#pie-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
 }

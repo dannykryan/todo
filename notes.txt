@@ -7,6 +7,8 @@ add status column, sort by inproggress, todo, complete, etc.
 search function for database (use debouncing)
 -set timeout to delay search function
 
+
+
 add priority, description, filter by, sort by, 
 
 add: *due date, *calendar view (https://bootstrapbrain.com/javascript-calendar-libraries-plugins/)
@@ -15,7 +17,8 @@ add: *due date, *calendar view (https://bootstrapbrain.com/javascript-calendar-l
 - - use css grid
 - - create a pie chart that visualises the data
 
-
+html5 drag and drop for basic version
+dndkit - drag and drop package for React
 
 
 drag and drop - html drag and drop api her: https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API

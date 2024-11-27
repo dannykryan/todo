@@ -1,11 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
+
 // Initialize Supabase client
-const supabaseUrl = 'https://btlchecofryrdsvdopfj.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0bGNoZWNvZnJ5cmRzdmRvcGZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0NDk0NTUsImV4cCI6MjA0NTAyNTQ1NX0.En0N951sxb7OWQ7M-dFdjqAZBHBsydekPVCJQzMlDTo';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const inputBox = document.getElementById('input-box');
+const descriptionBox = document.getElementById('description-box');
 const addButton = document.getElementById('add-button');
 const submitButton = document.getElementById('submit-button');
 const deleteButton = document.getElementById('delete-button');
@@ -15,6 +17,7 @@ const statusSelector = document.getElementById('status-selector');
 const categorySelector = document.getElementById('category-selector');
 const importantCheckbox = document.getElementById('important');
 const kanbanContainer = document.getElementById('kanban-container');
+const viewSelector = document.getElementById('view-selector');
 const sortSelector = document.getElementById('sort-selector');
 
 const searchButton = document.getElementById('search-button');
@@ -24,27 +27,50 @@ const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 
 let currentTodoId = null; // Variable to store the current todo's ID
+let debounceTimer; // Timer for debouncing search input
 
 // Fetch and display todos on page load
 async function fetchTodos() {
   const { data: todos, error } = await supabase
     .from('todos')
-    .select('*')
-    .order('created_at', { ascending: false })  // Sort by created_at, descending order
-    .order('uuid', { ascending: true }); // Sort by uuid as a tiebreaker
+    .select('*');
 
   if (error) {
     console.error('Error fetching todos:', error.message);
     return;
   }
 
+  // Sort todos based on the selected option
+  const sortBy = sortSelector.value;
+  let sortedTodos;
+
+  switch (sortBy) {
+    case 'priority':
+      sortedTodos = todos.sort((a, b) => {
+        // Assuming "important" is a boolean, prioritize true over false
+        return b.important - a.important;
+      });
+      break;
+    case 'due date':
+      sortedTodos = todos.sort((a, b) => {
+        // Handle null/undefined due dates
+        const dateA = a.due_date ? new Date(a.due_date) : new Date(0);
+        const dateB = b.due_date ? new Date(b.due_date) : new Date(0);
+        return dateA - dateB;
+      });
+      break;
+    default: // 'most recent' or any other unrecognized value
+      sortedTodos = todos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      break;
+  }
+
   // Clear the kanban container before adding new items
   kanbanContainer.innerHTML = '';
 
-  const sortBy = sortSelector.value; // Get the selected sort option
+  const viewBy = viewSelector.value; // Get the selected view option (status/category)
 
-  // Group todos by either 'status' or 'category' based on the selected sort
-  const groups = groupTodos(todos, sortBy);
+  // Group todos by either 'status' or 'category'
+  const groups = groupTodos(sortedTodos, viewBy);
 
   // Dynamically create kanban-status containers
   Object.keys(groups).forEach(groupKey => {
@@ -54,7 +80,7 @@ async function fetchTodos() {
 }
 
 // Group todos by 'status' or 'category'
-function groupTodos(todos, sortBy) {
+function groupTodos(todos, viewBy) {
   const grouped = {};
 
   // Define the specific order for categories and statuses
@@ -63,7 +89,7 @@ function groupTodos(todos, sortBy) {
 
   // Group todos by 'status' or 'category'
   todos.forEach(todo => {
-    const groupKey = todo[sortBy]; // 'status' or 'category'
+    const groupKey = todo[viewBy]; // 'status' or 'category'
     if (!grouped[groupKey]) {
       grouped[groupKey] = [];
     }
@@ -72,13 +98,13 @@ function groupTodos(todos, sortBy) {
 
   // Sort the grouped todos according to the fixed order
   const sortedGroups = {};
-  if (sortBy === 'category') {
+  if (viewBy === 'category') {
     categoryOrder.forEach(category => {
       if (grouped[category]) {
         sortedGroups[category] = grouped[category];
       }
     });
-  } else if (sortBy === 'status') {
+  } else if (viewBy === 'status') {
     statusOrder.forEach(status => {
       if (grouped[status]) {
         sortedGroups[status] = grouped[status];
@@ -94,7 +120,7 @@ function createKanbanStatusContainer(groupKey, todos, isCategory = false) {
   const kanbanStatusDiv = document.createElement('div');
   
   // Add the correct class based on whether this is a category or status
-  if (sortSelector.value === 'category') {
+  if (viewSelector.value === 'category') {
     kanbanStatusDiv.classList.add('kanban-category');
   } else {
     kanbanStatusDiv.classList.add('kanban-status');
@@ -174,6 +200,7 @@ async function deleteTodo(uuid) {
 // Add new todo
 async function addTodo() {
   const todoText = inputBox.value;
+  const description = descriptionBox.value;
   const selectedStatus = statusSelector.value;
   const selectedCategory = categorySelector.value;
 
@@ -183,7 +210,7 @@ async function addTodo() {
     // Update the existing todo
     const { data, error } = await supabase
       .from('todos')
-      .update({ todo: todoText, status: selectedStatus, category: selectedCategory, important: getCheckboxValue() }) // Update the text and status
+      .update({ todo: todoText, description: description, status: selectedStatus, category: selectedCategory, important: getCheckboxValue() }) // Update the text and status
       .eq('uuid', currentTodoId); // Match the current todo ID
 
     if (error) {
@@ -194,7 +221,7 @@ async function addTodo() {
     // Add new todo
     const { data, error } = await supabase
       .from('todos')
-      .insert([{ todo: todoText, completed: false, status: selectedStatus, category: selectedCategory, important: getCheckboxValue() }]);
+      .insert([{ todo: todoText, description: description, completed: false, status: selectedStatus, category: selectedCategory, important: getCheckboxValue() }]);
 
     if (error) {
       console.error('Error adding todo:', error);
@@ -209,6 +236,7 @@ async function addTodo() {
 let resetAndCloseModal = () => {
   // Reset all the modal values, current id and close the modal
   inputBox.value = '';
+  descriptionBox.value = '';
   document.getElementById('status-selector').value = 'todo';
   document.getElementById('category-selector').value = 'shopping';
   modal.style.display = 'none';
@@ -244,6 +272,7 @@ window.addEventListener('click', (event) => {
 // Open the modal when clicking a todo item
 function openEditModal(todo) {
   inputBox.value = todo.todo; // Set the input box value to the current todo text
+  descriptionBox.value = todo.description || '';
   document.getElementById('status-selector').value = todo.status; // Set the status selector to the current status
   document.getElementById('category-selector').value = todo.category; // Set the category selector to the current category
   modal.style.display = 'block'; // Show the modal
@@ -266,52 +295,57 @@ function openEditModal(todo) {
 
 // Set up event listeners
 submitButton.addEventListener('click', addTodo);
-
-// Handle sort selection change
+viewSelector.addEventListener('change', fetchTodos);
 sortSelector.addEventListener('change', fetchTodos);
 
 // Search functionality
-searchInput.addEventListener('input', async function() {
-  const searchTerm = searchInput.value.trim().toLowerCase();  // Get the search input and make it lowercase for case-insensitive search
-  
-  if (searchTerm === '') {
-    // If no search term, clear results
+searchInput.addEventListener('input', function () {
+  const searchTerm = searchInput.value.trim().toLowerCase();
+
+  // Clear the existing timer
+  clearTimeout(debounceTimer);
+
+  // Set a new timer to debounce the search function
+  debounceTimer = setTimeout(async function () {
+    if (searchTerm === '') {
+      // If no search term, clear results
+      searchResults.innerHTML = '';
+      return;
+    }
+
+    // Query Supabase to search for todos that match the search term
+    const { data: todos, error } = await supabase
+      .from('todos')
+      .select('*')
+      .ilike('todo', `%${searchTerm}%`); // Search for todos where the 'todo' field contains the search term (case-insensitive)
+
+    if (error) {
+      console.error('Error searching todos:', error.message);
+      return;
+    }
+
+    // Clear previous search results
     searchResults.innerHTML = '';
-    return;
-  }
 
-  // Query Supabase to search for todos that match the search term
-  const { data: todos, error } = await supabase
-    .from('todos')
-    .select('*')
-    .ilike('todo', `%${searchTerm}%`); // Search for todos where the 'todo' field contains the search term (case-insensitive)
+    // Display the search results in the modal
+    if (todos.length === 0) {
+      searchResults.innerHTML = '<li>No results found.</li>';
+    } else {
+      todos.forEach(todo => {
+        const resultItem = document.createElement('li');
+        resultItem.textContent = todo.todo;
+        resultItem.dataset.uuid = todo.uuid; // Store the UUID for each result
 
-  if (error) {
-    console.error('Error searching todos:', error.message);
-    return;
-  }
+        // Add click event to open the todo in the edit modal
+        resultItem.addEventListener('click', () => {
+          openEditModal(todo);
+          searchModal.style.display = 'none';
+        });
 
-  // Clear previous search results
-  searchResults.innerHTML = '';
-
-  // Display the search results in the modal
-  if (todos.length === 0) {
-    searchResults.innerHTML = '<li>No results found.</li>';
-  } else {
-    todos.forEach(todo => {
-      const resultItem = document.createElement('li');
-      resultItem.textContent = todo.todo;
-      resultItem.dataset.uuid = todo.uuid; // Store the UUID for each result
-      
-      // Add click event to open the todo in the edit modal
-      resultItem.addEventListener('click', () => {
-        openEditModal(todo);
-        searchModal.style.display = 'none';
+        searchResults.appendChild(resultItem);
       });
-      
-      searchResults.appendChild(resultItem);
-    });
-  }
+    }
+  }, 300); // Delay of 300ms
 });
 
 // Search modal event listeners

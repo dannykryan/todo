@@ -11,13 +11,21 @@
       <div class="todo-app">
         <div id="heading-container">
           <h1 class="main-title">This a Todo App</h1>
-          <p class="subheading">A simple todo app</p>
+          <nav>
+            <a href="dashboard.html">Dashboard</a>
+          </nav>
 
           <div class="heading-controls">
-            <label for="sort-selector">Sort By:</label>
-            <select id="sort-selector">
+            <label for="view-selector">Select view:</label>
+            <select id="view-selector">
               <option value="status" selected>Status</option>
               <option value="category">Category</option>
+            </select>
+            <label for="sort-selector">Sort By:</label>
+            <select id="sort-selector">
+              <option value="priority" selected>Priority</option>
+              <option value="most recent" selected>Most Recent</option>
+              <option value="due date">Due Date</option>
             </select>
             <div class="button-container">
               <button id="search-button" type="button">Search</button>
@@ -39,6 +47,7 @@
 
         <div class="modal-form">
           <input type="text" id="input-box" placeholder="Edit your text">
+          <textarea id="description-box" placeholder="Add a description"></textarea>
           <label for="status-selector">Select Status:</label>
           <select id="status-selector">
             <option value="todo" selected>Todo</option>
@@ -82,6 +91,5 @@
 
     <script src="/main.js" type="module"></script>
     <script src="/app.js"></script>
-    <script src="seedData.js"></script>
   </body>
 </html>
