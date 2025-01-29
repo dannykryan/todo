@@ -134,6 +134,43 @@ function createKanbanStatusContainer(groupKey, todos, isCategory = false) {
   ul.id = groupKey + '-list'; // Set the id to the group name (status or category)
   ul.classList.add('list');
 
+  // Enable drop functionality on the list
+  ul.addEventListener('dragover', (event) => {
+    event.preventDefault();
+  });
+
+  ul.addEventListener('drop', async (event) => {
+    event.preventDefault();
+    const draggedUUID = event.dataTransfer.getData('text/plain');
+    const draggedElement = document.querySelector(`[data-uuid="${draggedUUID}"]`);
+  
+    if (draggedElement) {
+      ul.appendChild(draggedElement);
+  
+      // Determine the correct field to udpate based on the view selector
+      const updateField = viewSelector.value === 'category' ? 'category' : 'status';
+      const newValue = ul.id.replace('-list', '');
+  
+      try {
+        // Update the status in Supabase
+        const { error } = await supabase
+          .from('todos')
+          .update({ [updateField]: newValue })
+          .eq('uuid', draggedUUID);
+    
+        if (error) {
+          console.error('Error updating todo status:', error);
+          return;
+        }
+    
+        // Refresh the todos to reflect the updated status
+        fetchTodos();
+      } catch (error) {
+        console.error('Error updating todo status:', error);
+      }
+    }
+  });
+
   // Icon mapping for each category
   const iconMapping = {
     shopping: '/images/shop-icon.svg',
@@ -146,6 +183,21 @@ function createKanbanStatusContainer(groupKey, todos, isCategory = false) {
     const li = document.createElement('li');
     li.textContent = todo.todo;
     li.dataset.uuid = todo.uuid;
+    li.draggable = true; // Make the item draggable
+
+    if (todo.important) {
+      li.classList.add('important');
+    }
+
+    // Add dragstart event to store UUID
+    li.addEventListener('dragstart', (event) => {
+      event.dataTransfer.setData('text/plain', todo.uuid);
+      li.classList.add('dragging');
+    });
+
+    li.addEventListener('dragend', () => {
+      li.classList.remove('dragging');
+    });
 
     // Create the category icon and set it based on the todo's category
     const categoryIcon = document.createElement('img');

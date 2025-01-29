@@ -13,7 +13,7 @@ add priority, description, filter by, sort by,
 
 add: *due date, *calendar view (https://bootstrapbrain.com/javascript-calendar-libraries-plugins/)
 - create a dashboard that you see before the main page.
-- - show total numbers for eahc of the statuses (total doing, stuck etc.)
+- - show total numbers for each of the statuses (total doing, stuck etc.)
 - - use css grid
 - - create a pie chart that visualises the data
 
